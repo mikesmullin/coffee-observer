@@ -1,6 +1,6 @@
 {
   "name": "coffee-observer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Utility functions for observing source code.",
   "main": "js/coffee-observer.js",
   "directories": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mikesmullin/coffee-assets.git"
+    "url": "git://github.com/mikesmullin/coffee-observer.git"
   },
   "keywords": [
     "coffee",
