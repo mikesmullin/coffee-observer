@@ -1,6 +1,6 @@
 {
   "name": "coffee-observer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utility functions for observing source code.",
   "main": "js/coffee-observer.js",
   "directories": {
