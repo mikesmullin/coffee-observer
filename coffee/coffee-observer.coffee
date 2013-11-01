@@ -1,10 +1,11 @@
-_             = require 'underscore'
-async         = require 'async2'
-path          = require 'path'
-path.xplat    = (b,s)->path.join.apply null,if s then [b].concat s.split '/' else b.split '/' # makes *nix paths cross-platform compatible
-growl         = require 'growl'
-gaze          = require 'gaze'
-child_process = require 'child_process'
+_              = require 'underscore'
+async          = require 'async2'
+path           = require 'path'
+path.xplat     = (b,s)->path.join.apply null,if s then [b].concat s.split '/' else b.split '/' # makes *nix paths cross-platform compatible
+growl          = require 'growl'
+gaze           = require 'gaze'
+child_process  = require 'child_process'
+throttledGrowl = _.throttle growl, 3*1000, trailing: false # growl is easy to flood without this
 
 module.exports = class CoffeeObserver
   constructor: ->
@@ -16,11 +17,7 @@ module.exports = class CoffeeObserver
   notify: (title, msg, image, err, show) ->
     @_titles[title] = @_color_index++ if typeof @_titles[title] is 'undefined'
     msg = msg.stack if err and typeof msg is 'object' and typeof msg.stack isnt 'undefined'
-    if show
-      # growl is easy to flood since notifications display for a few seconds each
-      _.throttle (->
-        growl msg, image: path.xplat(__dirname, "/../images/#{image}.png"), title: title
-      ) 3*1000
+    throttledGrowl msg, image: path.xplat(__dirname, "/../images/#{image}.png"), title: title if show
     msg = (''+msg).replace(/[\r\n]+$/, '')
     prefix = "#{@colors[@_titles[title]]}#{title}:\u001b[0m "
     console.log "#{prefix}#{msg.replace(/\n/g, "\n#{prefix}")}"
@@ -32,7 +29,7 @@ module.exports = class CoffeeObserver
     child.stdout.on 'data', (stdout) =>
       @notify title, ''+stdout, 'pending', false, false
     child.stderr.on 'data', (stderr) =>
-      _.throttle (=> @notify title, ''+stderr, 'failure', true, true), 10*1000 # too many errors can stack up quickly and flood growl until notifications seem to never end (each notification displays avg 3 sec)
+      @notify title, ''+stderr, 'failure', true, true
     child.on 'exit', (code) =>
       uptime = (new Date()-last_start)
       @notify title, "exit with code #{code or 0} (uptime: #{uptime/1000}sec). will restart...", 'pending', false, false

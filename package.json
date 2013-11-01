@@ -1,6 +1,6 @@
 {
   "name": "coffee-observer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Utility functions for observing source code.",
   "main": "js/coffee-observer.js",
   "directories": {
@@ -28,12 +28,14 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
+    "mocha": "*",
     "chai": "*"
   },
   "dependencies": {
     "coffee-script": "*",
     "growl": "*",
     "gaze": "*",
-    "async2": "*"
+    "async2": "*",
+    "underscore": "~1.5.2"
   }
 }
